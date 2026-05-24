@@ -20,15 +20,25 @@ from effectful.handlers.numpyro import Normal, HalfNormal
 from effectful_mcmc import sample, MCMC, NUTS
 
 def linear_regression(x, y):
-    alpha = sample(Normal(0.0, 10.0), name="alpha")
-    beta  = sample(Normal(0.0, 10.0), name="beta")
-    sigma = sample(HalfNormal(2.0),    name="sigma")
-    sample(Normal(alpha + beta * x, sigma), obs=y, name="obs")
+    alpha = sample(Normal(0.0, 10.0))
+    beta  = sample(Normal(0.0, 10.0))
+    sigma = sample(HalfNormal(2.0))
+    sample(Normal(alpha + beta * x, sigma), obs=y)
+    return alpha, beta, sigma                      # return per-site handles
 
 mcmc = MCMC(NUTS(linear_regression), num_warmup=500, num_samples=1000)
 mcmc.run(jr.PRNGKey(0), x_data, y_data)
-mcmc.print_summary()
+
+# Posteriors are keyed by the Operation behind each sample site;
+# `term.op` recovers it. No string names to keep in sync.
+alpha, beta, sigma = mcmc.model_return_value
+samples = mcmc.get_samples()
+print(float(samples[alpha.op].mean()),
+      float(samples[beta.op].mean()),
+      float(samples[sigma.op].mean()))
 ```
+
+Prefer string names? Pass `name="alpha"` etc. to each `sample(...)` and use `mcmc.get_samples_by_name()` for an ArviZ-shaped dict. You'll want names anyway for sites you plan to intervene on (`Intervene("sigma", ...)` below).
 
 The full notebook walkthrough — linear regression, hierarchical Bayes (eight schools), and a counterfactual via `Intervene` — is at [`docs/quickstart.ipynb`](docs/quickstart.ipynb).
 
