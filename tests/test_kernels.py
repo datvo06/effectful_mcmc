@@ -89,7 +89,7 @@ def test_nuts_multichain(chain_method):
     )
     mcmc.run(jr.PRNGKey(0))
     samples = mcmc.get_samples_by_name()
-    assert samples["x"].shape == (100,)            # 2 chains × 50 samples
+    assert samples["x"].shape == (100,)            # 2 chains * 50 samples
     grouped = mcmc.get_samples_by_name(group_by_chain=True)
     assert grouped["x"].shape == (2, 50)
 
@@ -149,12 +149,12 @@ def test_init_strategy_forwards():
 
 
 # ---------------------------------------------------------------------------
-# Combinatorial coverage: kwarg × distribution support family
+# Combinatorial coverage: kwarg x distribution support family
 # ---------------------------------------------------------------------------
 
 def test_dense_mass_with_lkjcholesky():
     """dense_mass=True on an LKJCholesky-only model. Combines two
-    independently-flaky paths: dense mass matrix construction × the
+    independently-flaky paths: dense mass matrix construction x the
     Cholesky factor support."""
     def model():
         sample(LKJCholesky(dim=3, concentration=1.0), name="L")

@@ -3,7 +3,7 @@
 Two layers:
 
 1. **Support-family tests** (9 tests, one per support family) with
-   explicit posterior-mean assertions bounded by ±4·MCSE, where MCSE
+   explicit posterior-mean assertions bounded by +/- 4*MCSE, where MCSE
    is computed as `std/sqrt(ESS)` via `numpyro.diagnostics.summary`.
    Use a pinned `jr.PRNGKey(0)` so reruns are deterministic.
 
@@ -53,7 +53,7 @@ def _mcse(samples: jnp.ndarray) -> float:
     """Monte-Carlo standard error of the posterior mean.
 
     MCSE = std / sqrt(ESS), using NumPyro's autocorrelation-corrected
-    ESS. The naive `std / sqrt(N)` is ~3× too tight on autocorrelated
+    ESS. The naive `std / sqrt(N)` is ~3x too tight on autocorrelated
     chains and would produce spurious failures.
     """
     # numpyro.diagnostics.summary expects (num_chains, num_samples, ...)
@@ -87,7 +87,7 @@ def test_real_support_normal():
 
 
 def test_positive_support_halfnormal():
-    """positive: HalfNormal(1) posterior mean within 4·MCSE of √(2/π)."""
+    """positive: HalfNormal(1) posterior mean within 4*MCSE of sqrt(2/pi)."""
     def model():
         sample(HalfNormal(1.0), name="x")
     samples = _run(model).get_samples_by_name()["x"]

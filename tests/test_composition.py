@@ -104,7 +104,7 @@ def test_intervention_tightens_remaining_posterior():
     std_baseline = float(jnp.std(m_baseline.get_samples_by_name()["mu"]))
     std_interv = float(jnp.std(m_interv.get_samples_by_name()["mu"]))
 
-    # Intervened std should be meaningfully smaller (≥5% reduction; the
+    # Intervened std should be meaningfully smaller (>=5% reduction; the
     # actual effect for this dataset is much larger, ~30%, so 5% is a
     # very loose flake-prevention margin).
     assert std_interv < 0.95 * std_baseline, \
@@ -189,7 +189,7 @@ def test_hierarchical_eight_schools_per_element_idiom():
     the workaround that works through the bridge today.
 
     Recovery target: tau > 0 (hierarchical variance is identifiable),
-    all draws finite. 8 schools × (1 theta + 1 obs) = 16 sites plus
+    all draws finite. 8 schools * (1 theta + 1 obs) = 16 sites plus
     mu/tau = 18 total — small but real hierarchical inference.
     """
     y = jnp.array([28.0, 8.0, -3.0, 7.0, -1.0, 1.0, 18.0, 12.0])
